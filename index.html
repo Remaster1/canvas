@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="canvas"> </canvas>
+  </body>
+  <script>
+    function radiant(deg) {
+      return -deg * (Math.PI / 180);
+    }
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 500;
+    canvas.height = 500;
+    const drawCircle = (color, x, y, fill=false) => {
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.strokeStyle = color;
+      ctx.arc(x, y, 60, 0, radiant(360), true);
+      ctx.stroke();
+      if (fill) {
+        ctx.fill();
+      }
+    };
+    let current = 0;
+    setInterval(() => {
+      if (current == 3){
+        current = 0
+      }
+      drawCircle("green", 100, 100, current == 2);
+      drawCircle("yellow", 230, 100, current == 1);
+      drawCircle("red", 360, 100, current == 0);
+      current++
+    },500);
+  </script>
+</html>
