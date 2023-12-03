@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+  </body>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: black;
+    }
+    canvas {
+      border: 3px solid white;
+    }
+  </style>
+  <script>
+    let canvas = document.getElementById("game");
+    let ctx = canvas.getContext("2d");
+    canvas.width = 400;
+    canvas.height = 400;
+
+    let grid = 16;
+    let count = 0;
+    let snake = {
+      speed: 4,
+      x: 0,
+      y: 0,
+      dx: grid,
+      dy: 0,
+      tails: [],
+      countTails: 4,
+    };
+    let eat = {
+      x: 0,
+      y: 0,
+    };
+    let getRandomInt = (min, max) => {
+      return Math.floor(Math.random() * (max - min)) + min;
+    };
+    let clear = () => {
+      canvas.width = canvas.width;
+      canvas.height = canvas.height;
+    };
+    let start = () => {
+      requestAnimationFrame(start);
+      if (count++ < snake.speed) {
+        return;
+      }
+      count = 0;
+      clear();
+      drawSnake();
+      drawEat();
+      finish();
+    };
+    let drawEat = () => {
+      console.log(1);
+      ctx.fillStyle = "red";
+      ctx.fillRect(eat.x, eat.y, grid - 1, grid - 1);
+      if (snake.x === eat.x && snake.y === eat.y) {
+        console.log(2);
+        snake.countTails++;
+        eat.x = getRandomInt(0, canvas.width / grid) * grid;
+        eat.y = getRandomInt(0, canvas.height / grid) * grid;
+      }
+    };
+    let drawSnake = () => {
+      snake.x += snake.dx;
+      snake.y += snake.dy;
+      if (snake.x < 0) {
+        snake.x = canvas.width - grid;
+      } else if (snake.x >= canvas.width) {
+        snake.x = 0;
+      }
+      if (snake.y < 0) {
+        snake.y = canvas.height - grid;
+      } else if (snake.y >= canvas.height) {
+        snake.y = 0;
+      }
+      snake.tails.unshift({ x: snake.x, y: snake.y });
+      if (snake.tails.length > snake.countTails) {
+        snake.tails.pop();
+      }
+      snake.tails.forEach((tail, index) => {
+        ctx.fillStyle = "green";
+        ctx.fillRect(tail.x, tail.y, grid - 1, grid - 1);
+      });
+    };
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "KeyA" && snake.dx === 0) {
+        snake.dx = -grid;
+        snake.dy = 0;
+      } else if (e.code === "KeyS" && snake.dy === 0) {
+        snake.dx = 0;
+        snake.dy = grid;
+      } else if (e.code === "KeyD" && snake.dx === 0) {
+        snake.dx = grid;
+        snake.dy = 0;
+      }
+      if (e.code === "KeyW" && snake.dy === 0) {
+        snake.dx = 0;
+        snake.dy = -grid;
+      }
+    });
+    let finish = () => {
+      for (let i = 0; i < snake.tails.length; i++) {
+        for (let j = 0; j < snake.tails.length; j++) {
+          let w = snake.tails[i];
+          let s = snake.tails[k];
+          if (w.x == s.x && w.y == s.y && i != k) {
+            snake.y = 0;
+            snake.x = 0;
+            snake.tails = [];
+            snake.countTails = 4;
+            snake.dx = grid;
+            snake.dy = 0;
+          }
+        }
+      }
+    };
+    requestAnimationFrame(start);
+  </script>
+</html>
